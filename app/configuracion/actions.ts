@@ -96,7 +96,6 @@ export async function crearPrimerNegocio(formData: FormData) {
   const nombre = (formData.get('nombre') as string).trim()
   if (!nombre) throw new Error('El nombre es requerido')
 
-  // Generar slug: "Café Martín" → "cafe-martin"
   const slug = nombre
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -108,8 +107,7 @@ export async function crearPrimerNegocio(formData: FormData) {
     .insert({ nombre, slug, activo: true, owner_id: user.id })
 
   if (error) throw new Error(error.message)
-
-  redirect('/dashboard')
+  // Sin redirect aquí — el cliente maneja la navegación
 }
 
 // ================================================================

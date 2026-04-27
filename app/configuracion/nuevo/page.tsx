@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { crearPrimerNegocio } from '../actions'
 
 // ================================================================
@@ -17,6 +17,7 @@ import { crearPrimerNegocio } from '../actions'
 //   3. Redirige a /dashboard
 // ================================================================
 export default function NuevoNegocioPage() {
+  const router = useRouter()
   const [nombre, setNombre] = useState('')
   const [color, setColor]   = useState('#4f46e5')
   const [isPending, startTransition] = useTransition()
@@ -36,8 +37,8 @@ export default function NuevoNegocioPage() {
     startTransition(async () => {
       try {
         await crearPrimerNegocio(fd)
+        router.push('/dashboard')
       } catch (err: unknown) {
-        if (isRedirectError(err)) throw err  // dejar que Next.js maneje el redirect
         toast.error(err instanceof Error ? err.message : 'Error al crear el negocio')
       }
     })
