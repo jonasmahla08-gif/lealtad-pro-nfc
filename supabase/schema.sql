@@ -1,0 +1,2 @@
+-- ESTE ARCHIVO ESTÁ OBSOLETO.
+-- Usa el archivo /schema.sql en la raíz del proyecto (v2, proyecto ktppukfiomhduvudiboj).
