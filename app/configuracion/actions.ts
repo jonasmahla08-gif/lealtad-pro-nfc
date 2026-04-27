@@ -80,7 +80,7 @@ export async function registrarCliente(formData: FormData) {
   })
 
   if (error) throw new Error(error.message)
-  if (!data?.ok) throw new Error(data?.error ?? 'Error al registrar cliente')
+  if (!data) throw new Error('Error al registrar cliente')
 
   revalidatePath('/configuracion')
 }
