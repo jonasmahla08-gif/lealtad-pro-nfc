@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { crearPrimerNegocio } from '../actions'
 
 // ================================================================
@@ -36,6 +37,7 @@ export default function NuevoNegocioPage() {
       try {
         await crearPrimerNegocio(fd)
       } catch (err: unknown) {
+        if (isRedirectError(err)) throw err  // dejar que Next.js maneje el redirect
         toast.error(err instanceof Error ? err.message : 'Error al crear el negocio')
       }
     })
