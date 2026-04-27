@@ -307,7 +307,7 @@ export function PosClient({ negocio }: PosClientProps) {
   // RENDER
   // ================================================================
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col" style={{ background: '#f8f7ff' }}>
 
       {/* Input invisible para modo USB — SIEMPRE en el DOM para no perder el foco */}
       {/* opacity-0 + pointer-events-none: invisible pero funcional para el lector */}
@@ -326,13 +326,21 @@ export function PosClient({ negocio }: PosClientProps) {
 
       {/* Header */}
       <header className="text-white px-4 py-4 flex items-center justify-between sticky top-0 z-10"
-              style={{ backgroundColor: color }}>
+              style={{
+                background: `linear-gradient(135deg, #1e1b4b 0%, ${color} 100%)`,
+                boxShadow: `0 4px 20px ${color}50`,
+              }}>
         <div>
-          <p className="font-bold text-lg leading-none">{negocio.nombre}</p>
-          <p className="text-xs opacity-70">Punto de Venta</p>
+          <p className="font-bold text-lg leading-none tracking-tight">{negocio.nombre}</p>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>Punto de Venta</p>
         </div>
         <button onClick={resetPos}
-          className="text-xs opacity-80 hover:opacity-100 font-medium border border-white/30 px-3 py-1.5 rounded-full transition">
+          className="text-xs font-semibold px-4 py-2 rounded-xl transition active:scale-95"
+          style={{
+            background: 'rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            backdropFilter: 'blur(8px)',
+          }}>
           {cliente ? '✕ Cancelar' : '⟳ Inicio'}
         </button>
       </header>
@@ -342,22 +350,31 @@ export function PosClient({ negocio }: PosClientProps) {
         {/* ── STEP: idle ─────────────────────────────────────── */}
         {step === 'idle' && (
           <div className="flex flex-col gap-4 flex-1 justify-center">
-            <div className="text-center py-4">
-              <div className="text-6xl mb-3">💳</div>
-              <h2 className="text-xl font-bold text-gray-800">Identificar cliente</h2>
+            <div className="text-center py-2">
+              <div className="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 text-4xl"
+                   style={{ background: `linear-gradient(135deg, #1e1b4b, ${color})`,
+                            boxShadow: `0 8px 32px ${color}40` }}>
+                💳
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">Identificar cliente</h2>
+              <p className="text-sm text-gray-400 mt-1">Selecciona el método de lectura</p>
             </div>
 
             {/* Toggle de 3 modos */}
-            <div className="flex bg-gray-200 rounded-2xl p-1 gap-1">
+            <div className="flex rounded-2xl p-1 gap-1"
+                 style={{ background: '#f1f5f9' }}>
               {([
                 { id: 'usb'   as SearchMode, label: '🖥️ USB'      },
                 { id: 'nfc'   as SearchMode, label: '📡 NFC'      },
                 { id: 'phone' as SearchMode, label: '📞 Teléfono' },
               ]).map(({ id, label }) => (
                 <button key={id} onClick={() => setMode(id)}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-semibold transition ${
-                    searchMode === id ? 'bg-white shadow text-gray-900' : 'text-gray-500'
-                  }`}>
+                  className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all"
+                  style={searchMode === id ? {
+                    background: `linear-gradient(135deg, #1e1b4b, ${color})`,
+                    color: 'white',
+                    boxShadow: `0 4px 12px ${color}40`,
+                  } : { color: '#94a3b8' }}>
                   {label}
                 </button>
               ))}
@@ -367,15 +384,17 @@ export function PosClient({ negocio }: PosClientProps) {
             {searchMode === 'usb' && (
               <div
                 onClick={() => usbInputRef.current?.focus()}
-                className="flex flex-col items-center gap-4 py-8 rounded-3xl border-2 border-dashed cursor-pointer transition-colors"
-                style={{ borderColor: color + '60', backgroundColor: color + '08' }}
+                className="flex flex-col items-center gap-4 py-10 rounded-3xl cursor-pointer transition-all"
+                style={{
+                  background: `linear-gradient(135deg, ${color}10, ${color}06)`,
+                  border: `2px dashed ${color}40`,
+                }}
               >
-                {/* Ícono con pulso para indicar que está escuchando */}
                 <div className="relative">
-                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl bg-white shadow-md">
+                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl bg-white"
+                       style={{ boxShadow: `0 8px 24px ${color}30` }}>
                     🖥️
                   </div>
-                  {/* Dot pulsante — indica que el input está activo y escuchando */}
                   <span className="absolute -top-1 -right-1 flex h-4 w-4">
                     <span className="animate-ping absolute h-full w-full rounded-full opacity-75"
                           style={{ backgroundColor: color }} />
@@ -385,15 +404,15 @@ export function PosClient({ negocio }: PosClientProps) {
                 </div>
 
                 <div className="text-center px-4">
-                  <p className="font-bold text-gray-800 text-base">Lector USB activo</p>
+                  <p className="font-bold text-gray-900 text-base">Lector USB activo</p>
                   <p className="text-sm text-gray-500 mt-1">
                     Acerca la tarjeta al lector conectado por USB
                   </p>
-                  <p className="text-xs text-gray-400 mt-3 font-mono bg-gray-100 px-3 py-1 rounded-full">
+                  <p className="text-xs mt-3 font-mono px-4 py-1.5 rounded-full inline-block"
+                     style={{ background: `${color}15`, color }}>
                     Esperando lectura…
                   </p>
                 </div>
-
                 <p className="text-xs text-gray-400 text-center px-6">
                   Si el lector no responde, haz clic aquí para re-enfocar
                 </p>
@@ -403,9 +422,11 @@ export function PosClient({ negocio }: PosClientProps) {
             {/* ── Modo NFC móvil ────────────────────────────────── */}
             {searchMode === 'nfc' && (
               <button onClick={handleScanNfc}
-                className="min-h-[80px] w-full rounded-3xl text-white font-bold text-lg shadow-lg
-                           active:scale-95 transition-all flex items-center justify-center gap-3"
-                style={{ backgroundColor: color }}>
+                className="min-h-[100px] w-full rounded-3xl text-white font-bold text-lg active:scale-95 transition-all flex items-center justify-center gap-3"
+                style={{
+                  background: `linear-gradient(135deg, #1e1b4b, ${color})`,
+                  boxShadow: `0 8px 32px ${color}50`,
+                }}>
                 <span className="text-3xl">📡</span>
                 Escanear Tarjeta NFC
               </button>
@@ -419,13 +440,20 @@ export function PosClient({ negocio }: PosClientProps) {
                   placeholder="Número de teléfono del cliente"
                   value={phoneInput}
                   onChange={e => setPhone(e.target.value)}
-                  className="w-full px-4 py-4 border border-gray-200 rounded-2xl text-lg
-                             focus:outline-none focus:ring-2 text-center"
-                  style={{ '--tw-ring-color': color } as React.CSSProperties}
+                  className="w-full px-4 py-4 rounded-2xl text-lg text-center outline-none transition-all"
+                  style={{
+                    background: '#f8fafc',
+                    border: '2px solid #e2e8f0',
+                  }}
+                  onFocus={e => e.target.style.borderColor = color}
+                  onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                 />
                 <button type="submit"
-                  className="min-h-[56px] w-full rounded-2xl text-white font-bold text-base shadow active:scale-95 transition-all"
-                  style={{ backgroundColor: color }}>
+                  className="min-h-[56px] w-full rounded-2xl text-white font-bold text-base active:scale-95 transition-all"
+                  style={{
+                    background: `linear-gradient(135deg, #1e1b4b, ${color})`,
+                    boxShadow: `0 4px 20px ${color}40`,
+                  }}>
                   🔍 Buscar cliente
                 </button>
               </form>
@@ -461,19 +489,30 @@ export function PosClient({ negocio }: PosClientProps) {
         {(step === 'cliente_cargado' || step === 'procesando' || step === 'pin_modal') && cliente && (
           <>
             {/* Tarjeta del cliente */}
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-5">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0"
-                     style={{ backgroundColor: color }}>
+            <div className="rounded-3xl p-5 text-white relative overflow-hidden"
+                 style={{
+                   background: `linear-gradient(135deg, #1e1b4b 0%, ${color} 100%)`,
+                   boxShadow: `0 8px 32px ${color}50`,
+                 }}>
+              <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10"
+                   style={{ background: 'radial-gradient(circle, white, transparent)',
+                            transform: 'translate(30%, -30%)' }} />
+              <div className="flex items-center gap-4 relative">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black flex-shrink-0"
+                     style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}>
                   {cliente.nombre?.[0]?.toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-gray-900 text-lg truncate">{cliente.nombre}</p>
-                  {cliente.telefono && <p className="text-sm text-gray-400">{cliente.telefono}</p>}
+                  <p className="font-bold text-white text-lg truncate">{cliente.nombre}</p>
+                  {cliente.telefono && (
+                    <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                      {cliente.telefono}
+                    </p>
+                  )}
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="text-xs text-gray-400 mb-0.5">Saldo</p>
-                  <p className="text-xl font-bold" style={{ color }}>
+                  <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Saldo</p>
+                  <p className="text-2xl font-black text-white">
                     {formatMXN(cliente.saldo ?? 0)}
                   </p>
                 </div>
@@ -489,8 +528,12 @@ export function PosClient({ negocio }: PosClientProps) {
             />
 
             <div className="grid grid-cols-2 gap-3 pb-4">
-              <ActionButton label="💸 Cobrar"   onClick={handleCobrar}   disabled={step === 'procesando' || amountCents === 0} className="bg-gray-900 text-white hover:bg-gray-800" />
-              <ActionButton label="⚡ Recargar" onClick={handleRecargar} disabled={step === 'procesando' || amountCents === 0} style={{ backgroundColor: color }} className="text-white" />
+              <ActionButton label="💸 Cobrar"   onClick={handleCobrar}   disabled={step === 'procesando' || amountCents === 0}
+                style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)',
+                         boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }} className="text-white" />
+              <ActionButton label="⚡ Recargar" onClick={handleRecargar} disabled={step === 'procesando' || amountCents === 0}
+                style={{ background: `linear-gradient(135deg, #1e1b4b, ${color})`,
+                         boxShadow: `0 4px 16px ${color}50` }} className="text-white" />
             </div>
           </>
         )}
