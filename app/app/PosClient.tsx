@@ -243,8 +243,7 @@ export function PosClient({ negocio }: PosClientProps) {
     setPinError('')
 
     const { data, error } = await supabase.rpc('realizar_transaccion', {
-      p_nfc_id:     cliente?.nfc_id ?? '',
-      p_negocio_id: negocio.id,
+      p_cliente_id: cliente!.id,
       p_tipo:       'cobro',
       p_monto:      amountCents / 100,
       p_pin:        pin,
@@ -277,8 +276,7 @@ export function PosClient({ negocio }: PosClientProps) {
     setStep('procesando')
 
     const { data, error } = await supabase.rpc('realizar_transaccion', {
-      p_nfc_id:     cliente?.nfc_id ?? '',
-      p_negocio_id: negocio.id,
+      p_cliente_id: cliente!.id,
       p_tipo:       'recarga',
       p_monto:      amountCents / 100,
       p_pin:        '',
